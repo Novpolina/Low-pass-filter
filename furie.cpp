@@ -18,9 +18,12 @@ const double dt = 0.000001;
 const int diskret_num = all_time / dt;
 double df = 0.5 / (1000 * T);
 
+
+
 double K(double f, double f0) {
     return 1/sqrt(1+(1.0/f0)*(1.0/f0)*f*f);
 }
+
 double K1(double f, double f0) {
     if(f < f0){
         return 1;
@@ -136,7 +139,7 @@ int main() {
     vector<complex<double>> freqDomain = dft(input, frequencies, t);
 
 
-    // Спектр сигнала
+    // Спектр входного сигнала
     std::vector<double> freqDomainReal(10000);
 
     for(int i = 0; i < freqDomain.size(); i++){
@@ -145,17 +148,13 @@ int main() {
     save_to_file(frequencies, freqDomainReal, "spectrum.txt");
 
 
-
-    std::vector<double> K_omega(10000);
-    for(int i = 0; i < 10000; i++){
-        K_omega[i] = K1(frequencies[i], f0);
-    }
-    save_to_file(frequencies, K_omega, "K(w).txt");
-
+    // Преобразование сигнала ФНЧ
 
     for(int i = 0; i < frequencies.size(); i++){
         freqDomain[i] = freqDomain[i] * K(frequencies[i], f0);
     }
+
+    //Спектр выхордного сигнала
 
     for(int i = 0; i < freqDomain.size(); i++){
         freqDomainReal[i] = freqDomain[i].real(); 
